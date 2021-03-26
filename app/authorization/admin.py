@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .models import CustomUser, Customers, Employees
+from django.db.models import Q
 
 import csv
 from django.http import HttpResponse
@@ -31,12 +32,13 @@ class EmployeesTabularInline(admin.TabularInline):
     model = Employees
     # readonly_fields = ['id']
 
+
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = ('email', 'role')
     list_filter = ('email', 'is_staff', 'is_active',)
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'role')}),
+        (None, {'fields': ('email', 'password', 'first_name', 'last_name', 'role')}),
         ('Permissions', {'fields': ('is_staff', 'is_active')}),
     )
     add_fieldsets = (
@@ -66,9 +68,29 @@ admin.site.register(CustomUser, CustomUserAdmin)
 
 @admin.register(Customers)
 class CustomersAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name',)
+    list_display = ('id', 'full_name',)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'user':
+            kwargs['queryset'] = CustomUser.objects.filter(role='customer')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def full_name(self, obj):
+        return obj.user.first_name + obj.user.last_name
+
+    full_name.short_description = '姓名'
 
 
 @admin.register(Employees)
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name',)
+    list_display = ('id', 'full_name',)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'user':
+            kwargs['queryset'] = CustomUser.objects.filter(Q(role='employee') | Q(role='manager'))
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def full_name(self, obj):
+        return obj.user.first_name + obj.user.last_name
+
+    full_name.short_description = '姓名'
