@@ -73,7 +73,7 @@ class CustomUser(AbstractUser):
 
 class Customers(models.Model):
     id = models.CharField('員工編號', max_length=100, default=partial(make_user_number, 'C'), unique=True)
-    user = models.OneToOneField('CustomUser', primary_key=True, on_delete=models.CASCADE,related_name='c_role_info')
+    user = models.OneToOneField('CustomUser', primary_key=True, on_delete=models.CASCADE,related_name='customer')
     create_at = models.DateTimeField('建立日期', auto_now_add=True)
     update_at = models.DateTimeField('更新日期', auto_now=True)
 
@@ -87,10 +87,9 @@ class Customers(models.Model):
         super(Customers, self).save(*args, **kwargs)
 
 
-#
 class Employees(models.Model):
     id = models.CharField('員工編號', max_length=100, default=partial(make_user_number, 'E'), unique=True)
-    user = models.OneToOneField('CustomUser', primary_key=True, on_delete=models.CASCADE,related_name='e_role_info')
+    user = models.OneToOneField('CustomUser', primary_key=True, on_delete=models.CASCADE,related_name='employee')
     create_at = models.DateTimeField('建立日期', auto_now_add=True)
     update_at = models.DateTimeField('更新日期', auto_now=True)
 

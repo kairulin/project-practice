@@ -1,8 +1,8 @@
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
 from app.authorization import views  as authorization_views
 
-router = DefaultRouter()
+router = SimpleRouter()
 
 router.register('users',authorization_views.CustomUserViewSet)
 router.register('employees',authorization_views.EmployeesViewSet)

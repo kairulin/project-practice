@@ -1,21 +1,20 @@
 window.onload = function () {
     (function ($) {
-        console.log('hi')
-        $("#customers-group").hide();
-        $("#employees-group").hide();
+        $("#customer-group").hide();
+        $("#employee-group").hide();
 
         $('#id_role').on("change", function () {
             const roles = this.value;
             if (roles === "customer") {
-                $("#customers-group").show();
+                $("#customer-group").show();
             } else {
-                $("#customers-group").hide();
+                $("#customer-group").hide();
             }
 
             if (roles === "employee" || roles === "manager") {
-                $("#employees-group").show();
+                $("#employee-group").show();
             } else {
-                $("#employees-group").hide();
+                $("#employee-group").hide();
             }
         })
 
